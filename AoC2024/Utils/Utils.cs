@@ -6,11 +6,12 @@ public static class Utils
     {
         dict[key] = dict.TryGetValue(key, out var result) ? result + value : value;
     }
-    
+
     public static void AddOrSet<T1>(this Dictionary<T1, long> dict, T1 key, long value) where T1 : notnull
     {
         dict[key] = dict.TryGetValue(key, out var result) ? result + value : value;
     }
+
     public static List<T> RemoveAtIndex<T>(this List<T> list, int index)
     {
         var pre = list.GetRange(0, index);
@@ -25,9 +26,11 @@ public static class Utils
             action(element);
         }
     }
-    
+
     public static int ToInt(this string value) => int.Parse(value);
-    public static Tuple<T,T> ToPair<T>(this IEnumerable<T> list)
+    public static long ToLong(this string value) => long.Parse(value);
+
+    public static Tuple<T, T> ToPair<T>(this IEnumerable<T> list)
     {
         var e = list.GetEnumerator();
         e.MoveNext();
@@ -56,13 +59,4 @@ public static class Utils
 
         yield return result;
     }
-    
-}
-
-public record Vector2(int X, int Y)
-{
-    public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(a.X + b.X, a.Y + b.Y);
-    public static Vector2 operator -(Vector2 a, Vector2 b) => new Vector2(a.X - b.X, a.Y - b.Y);
-    public static Vector2 operator *(Vector2 a, int x) => new Vector2(a.X * x, a.Y * x);
-    public Vector2 RotateClockwise() => new Vector2(-Y, X);
 }

@@ -28,22 +28,22 @@ public static class Day06
         var right = lines.FindPosition('>');
         if (up is not null)
         {
-            current = up;
+            current = up.Value;
             dir = new Vector2(0, -1);
         }
         else if (down is not null)
         {
-            current = down;
+            current = down.Value;
             dir = new Vector2(0, 1);
         }
         else if (left is not null)
         {
-            current = left;
+            current = left.Value;
             dir = new Vector2(-1, 0);
         }
         else if (right is not null)
         {
-            current = right;
+            current = right.Value;
             dir = new Vector2(1, 0);
         }
         else

@@ -1,4 +1,5 @@
 ﻿using AoC2024.Solution;
 
-Console.WriteLine($"Solution: { Day11.Part1()} ");
+
+Console.WriteLine($"Solution: { Day21.Part1()} ");
 

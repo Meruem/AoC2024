@@ -21,6 +21,14 @@ public static class Map
         return null;
     }
 
+    public static void SetElementAt(this IList<string> map, char element, Vector2 position)
+    {
+        var s = map[position.Y];
+        s = s.Remove(position.X, 1);
+        s = s.Insert(position.X, element.ToString());
+        map[position.Y] = s;
+    }
+
     public static IEnumerable<Vector2> Positions(this IList<string> lines)
     {
         for (int y = 0; y < lines.Count; y++)
