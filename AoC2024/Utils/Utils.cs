@@ -41,6 +41,19 @@ public static class Utils
         return new Tuple<T, T>(a, b);
     }
 
+    public static (T, T, T) ToTriple<T>(this IEnumerable<T> list)
+    {
+        var e = list.GetEnumerator();
+        e.MoveNext();
+        var a = e.Current;
+        e.MoveNext();
+        var b = e.Current;
+        e.MoveNext();
+        var c = e.Current;
+        e.Dispose();
+        return new (a, b, c);
+    }
+
     public static IEnumerable<List<T>> SplitBy<T>(this IList<T> list, T delimiter)
     {
         var result = new List<T>();
