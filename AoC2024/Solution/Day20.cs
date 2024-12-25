@@ -44,17 +44,7 @@ public static class Day20
                 .Where(d => d > 0)
                 .ToList();
         });
-
-        // var g = result
-        //     .Where(it => it >= 100)
-        //     .GroupBy(g => g)
-        //     .Select(g => new
-        //     {
-        //         Key = g.Key,
-        //         Count = g.Count()
-        //     })
-        //     .ToDictionary(g => g.Key, g => g.Count);
-
+        
         return result.Count(cd => cd >= 100);
     }
 }
