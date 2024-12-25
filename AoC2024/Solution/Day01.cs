@@ -1,8 +1,10 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day01
+public  class Day01 : SolutionBase
 {
-    public static int Part1()
+    public override string Part1()
     {
         var (left, right) = GetInputs();
         left.Sort();
@@ -14,10 +16,10 @@ public static class Day01
             result += Math.Abs(left[i] - right[i]);
         }
 
-        return result;
+        return result.ToString();
     }
     
-    public static int Part2()
+    public override string Part2()
     {
         var (left, right) = GetInputs();
         var rightCounts = right.Aggregate(new Dictionary<int, int>(),
@@ -28,15 +30,14 @@ public static class Day01
             });
 
         var result = left.Sum(t => t * rightCounts.GetValueOrDefault(t));
-        return result;
+        return result.ToString();
     }
 
-    private static (List<int> left, List<int> right) GetInputs()
+    private (List<int> left, List<int> right) GetInputs()
     {
-        var lines = File.ReadLines("Input/day01.txt");
         var left = new List<int>();
         var right = new List<int>();
-        foreach (var line in lines)
+        foreach (var line in Lines)
         {
             var splits = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             left.Add(int.Parse(splits[0]));

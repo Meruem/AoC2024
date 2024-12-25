@@ -1,16 +1,18 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day11
+public class Day11 : SolutionBase
 {
-    public static long Part1() => Solve(25);
-    public static long Part2() => Solve(75);
-    private static long Solve(int blinks)
+    public override string Part1() => Solve(25).ToString();
+    public override string Part2() => Solve(75).ToString();
+
+    private long Solve(int blinks)
     {
-        var input 
-            = "0 89741 316108 7641 756 9 7832357 91"
+        var input = InputText
             .Split(" ")
             .Select(long.Parse)
-            .ToDictionary(i => i, i => 1L);
+            .ToDictionary(i => i, _ => 1L);
         Enumerable.Range(1, blinks)
             .ForEach(blink =>
             {
@@ -32,10 +34,8 @@ public static class Day11
                         next.AddOrSet(kvp.Key * 2024, kvp.Value);
                     }
                 }
+
                 input = next;
-                
-                // Console.WriteLine($"{blink}: {string.Join(',', next)} ");
-                Console.WriteLine(blink);
             });
 
         return input.Sum(kvp => kvp.Value);

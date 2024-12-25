@@ -1,11 +1,12 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day08
+public class Day08 : SolutionBase
 {
-    public static int Part1()
+    public override string Part1()
     {
-        var lines = File.ReadLines(@"Input/day08.txt").ToList();
-        var antennas = GetAntennas(lines);
+        var antennas = GetAntennas(Lines);
 
         var res = new HashSet<Vector2>();
         foreach (var group in antennas)
@@ -25,13 +26,12 @@ public static class Day08
             }
         }
 
-        return res.Count(pos => lines.IsInRange(pos));
+        return res.Count(pos => Lines.IsInRange(pos)).ToString();
     }
     
-    public static int Part2()
+    public override string Part2()
     {
-        var lines = File.ReadLines(@"Input/day08.txt").ToList();
-        var antennas = GetAntennas(lines);
+        var antennas = GetAntennas(Lines);
 
         var res = new HashSet<Vector2>();
         foreach (var group in antennas)
@@ -46,13 +46,13 @@ public static class Day08
                     var a = pos2 - diff;
                     res.Add(pos1);
                     res.Add(pos2);
-                    while (lines.IsInRange(a))
+                    while (Lines.IsInRange(a))
                     {
                         res.Add(a);
                         a -= diff;
                     }
                     var b = pos1 + diff;
-                    while (lines.IsInRange(b))
+                    while (Lines.IsInRange(b))
                     {
                         res.Add(b);
                         b += diff;
@@ -61,10 +61,10 @@ public static class Day08
             }
         }
 
-        return res.Count;
+        return res.Count.ToString();
     }
 
-    private static Dictionary<char, List<Tuple<char, Vector2>>> GetAntennas(List<string> lines)
+    private Dictionary<char, List<Tuple<char, Vector2>>> GetAntennas(string[] lines)
     {
         var antennas = 
             lines

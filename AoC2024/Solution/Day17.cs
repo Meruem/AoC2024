@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text;
+using AoC2024.Utils;
 
 namespace AoC2024.Solution;
 
@@ -11,21 +12,20 @@ namespace AoC2024.Solution;
 // 1,6, => B = B XOR 6
 // 5,5, => OUT (B % 8)
 // 3,0 => A == 0 ? END : JUMP 0
-public static class Day17
+public class Day17 : SolutionBase
 {
-    public static string Part1()
+    public override string Part1()
     {
-        var lines = File.ReadAllLines("Input/day17t.txt");
-        var regA = lines[0].Replace("Register A: ", "").ToInt();
-        var regB = lines[1].Replace("Register B: ", "").ToInt();
-        var regC = lines[2].Replace("Register C: ", "").ToInt();
-        var program = lines[4].Replace("Program: ", "").Split(',').Select(byte.Parse).ToList();
+        var regA = Lines[0].Replace("Register A: ", "").ToInt();
+        var regB = Lines[1].Replace("Register B: ", "").ToInt();
+        var regC = Lines[2].Replace("Register C: ", "").ToInt();
+        var program = Lines[4].Replace("Program: ", "").Split(',').Select(byte.Parse).ToList();
         var computer = new Computer();
         var output = computer.RunProgram(program, regA, regB, regC);
         return string.Join(',', output);
     }
 
-    public static List<byte> SimpleCompute(long a)
+    public List<byte> SimpleCompute(long a)
     {
         long b;
         long c;
@@ -62,7 +62,7 @@ public static class Day17
         }
     }
 
-    public static long Part2()
+    public override string Part2()
     {
         var expected = new List<byte> { 2, 4, 1, 1, 7, 5, 0, 3, 4, 3, 1, 6, 5, 5, 3, 0 };
         // var expected = new List<byte> { 0,3,5,4,3,0 };
@@ -117,6 +117,6 @@ public static class Day17
         {
             var str = string.Join("", sol.Bits.OrderByDescending(b => b.Key).Select(b => b.Value ? "1" : "0"));
             return Convert.ToInt64(str, 2);
-        });
+        }).ToString();
     }
 }

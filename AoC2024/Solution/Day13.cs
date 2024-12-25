@@ -1,11 +1,12 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day13
+public class Day13 : SolutionBase
 {
-        public static long Part2()
+        public override string Part2()
     {
-        var lines = File.ReadAllLines("Input/day13.txt");
-        var machines = lines.SplitBy("").ToList();
+        var machines = Lines.SplitBy("").ToList();
         long res = 0;
         foreach (var machine in machines)
         {
@@ -32,13 +33,12 @@ public static class Day13
             }
         }
 
-        return res;
+        return res.ToString();
     }
     
-    public static int Part1()
+    public override string Part1()
     {
-        var lines = File.ReadAllLines("Input/day13.txt");
-        var machines = lines.SplitBy("").ToList();
+        var machines = Lines.SplitBy("").ToList();
         var res = 0;
         foreach (var machine in machines)
         {
@@ -66,6 +66,6 @@ public static class Day13
             }
         }
 
-        return res;
+        return res.ToString();
     }
 }

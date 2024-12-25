@@ -1,4 +1,49 @@
-namespace AoC2024;
+namespace AoC2024.Utils;
+
+public class Grid(int width, int height)
+{
+    private readonly char[] _grid = new char[width * height];
+    public int Height => height;
+    public int Width => width;
+
+    public static Grid FromLines(string[] lines)
+    {
+        var height = lines.Length;
+        var width = lines[0].Length;
+        var grid = new Grid(width, height);
+        var i = 0;
+        foreach (var line in lines)
+        foreach (var ch in line)
+        {
+            grid._grid[i] = ch;
+            i++;
+        }
+        return grid;
+    }
+    
+    private int Index(Vector2 pos) => pos.Y * height + pos.X;
+    
+    public bool HasElementAt(char element, Vector2 position)
+        => IsInRange(position) && _grid[Index(position)] == element;
+
+    public bool IsInRange(Vector2 position) =>
+        position.Y >= 0 && position.Y < height && position.X >= 0 && position.X < width;
+    
+    public Vector2? FindPosition(char element)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (_grid[y * height + x] == element) return new Vector2(x, y);
+            }
+        }
+
+        return null;
+    }
+
+
+}
 
 public static class Map
 {

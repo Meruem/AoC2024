@@ -1,8 +1,10 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day24
+public class Day24 : SolutionBase
 {
-    private static OpLine? GetOperation(this List<OpLine> operations, string a, string b, string? op = null,
+    private OpLine? GetOperation(List<OpLine> operations, string a, string b, string? op = null,
         string? c = null)
     {
         return operations.FirstOrDefault(o =>
@@ -11,7 +13,7 @@ public static class Day24
             && (c is null || o.C == c));
     }
 
-    public static string Part2()
+    public override string Part2()
     {
         var items = new List<string> { "shj", "z07", "tpk", "wkb", "pfn", "z23", "z27", "kcd" }.Order();
         return string.Join(',', items);
@@ -25,7 +27,7 @@ public static class Day24
     // x27 AND y27 -> z27 <-> vpt XOR hdg -> kcd
     // shj, z07, tpk, wkb, pfn, z23, z27, kcd
     // 
-    public static string Part2_A()
+    public  string Part2_A()
     {
         var (wires, operations) = GetInput();
         var x = GetNumber(wires.Select(kvp => (kvp.Key, kvp.Value)), "x");
@@ -36,8 +38,8 @@ public static class Day24
         var inputs = Enumerable.Range(0, 45)
             .Select(i => (A: $"x{i:D2}", B: $"y{i:D2}")).ToList();
 
-        var startAnds = inputs.Select(input => operations.GetOperation(input.A, input.B, "AND")).ToList();
-        var startXors = inputs.Select(input => operations.GetOperation(input.A, input.B, "XOR")).ToList();
+        var startAnds = inputs.Select(input => GetOperation(operations, input.A, input.B, "AND")).ToList();
+        var startXors = inputs.Select(input => GetOperation(operations, input.A, input.B, "XOR")).ToList();
         var ors = operations.Where(op => op.Op == "OR").ToList();
         var ands = operations.Where(op => op.Op == "AND").ToList();
         var xors = operations.Where(op => op.Op == "XOR").ToList();
@@ -79,7 +81,7 @@ public static class Day24
             
         }
 
-        string c = operations.GetOperation("x00", "y00", "AND")!.C;
+        string c = GetOperation(operations,"x00", "y00", "AND")!.C;
         var switched = new List<(OpLine From, OpLine To)>();
         var missing = new List<OpLine>();
         var usedOperations = new List<OpLine>();
@@ -96,13 +98,13 @@ public static class Day24
             // 4. tmp1 = xor1 & c1 (44)
             // 5. c1 = tmp1 | and1 (44)
             //Console.WriteLine(i);
-            var andOp = operations.GetOperation($"x{i:D2}", $"y{i:D2}", "AND")!;
-            var xorOp = operations.GetOperation($"x{i:D2}", $"y{i:D2}", "XOR")!;
+            var andOp =  GetOperation(operations,$"x{i:D2}", $"y{i:D2}", "AND")!;
+            var xorOp = GetOperation(operations,$"x{i:D2}", $"y{i:D2}", "XOR")!;
             usedOperations.AddRange(andOp, xorOp);
             // exist (x1 xor y1) xor c0 => z1
-            var op1 = operations.GetOperation(a: xorOp.C, b: c, "XOR");
+            var op1 = GetOperation(operations,a: xorOp.C, b: c, "XOR");
             // exist (x1 xor y1) and c0 => tmp
-            var op2 = operations.GetOperation(xorOp.C, c, "AND");
+            var op2 = GetOperation(operations,xorOp.C, c, "AND");
             if (op1 is null)
             {
                 var misop = new OpLine(xorOp.C, c, "XOR", $"z{i:D2}");
@@ -135,7 +137,7 @@ public static class Day24
             usedOperations.Add(op2!);
 
             // exist tmp OR (x1 and y1) => c1
-            var op3 = operations.GetOperation(op2.C, andOp.C, "OR");
+            var op3 = GetOperation(operations,op2.C, andOp.C, "OR");
             if (op3 is null)
             {
                 Console.WriteLine($"i: {i} missing: {op2.C}, {andOp.C}, OR");
@@ -194,10 +196,10 @@ public static class Day24
     }
 
 
-    public static long Part1()
+    public override string Part1()
     {
         var (wires, operations) = GetInput();
-        return Solve(wires, operations);
+        return Solve(wires, operations).ToString();
     }
 
     private static long Solve(Dictionary<string, bool> wires, List<OpLine> operations)
@@ -243,10 +245,9 @@ public static class Day24
         override public string ToString() => $"{A} {Op} {B} -> {C}";
     }
 
-    private static (Dictionary<string, bool> wires, List<OpLine> operations) GetInput()
+    private  (Dictionary<string, bool> wires, List<OpLine> operations) GetInput()
     {
-        var lines = File.ReadAllLines("Input/day24.txt");
-        var parts = lines.SplitBy("").ToList();
+        var parts = Lines.SplitBy("").ToList();
         var wires = parts[0].Select(line =>
         {
             var (id, state) = line.Split(": ").ToPair();

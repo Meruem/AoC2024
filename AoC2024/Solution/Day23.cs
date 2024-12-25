@@ -1,63 +1,38 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day23
+public class Day23 : SolutionBase
 {
-    public static string Part2_2()
+    public override string Part2()
     {
         var conMap = GetInput();
-        var keys = conMap.Keys.ToList();
-        var subnets = keys.Select(k => new HashSet<string> { k }).ToList();
-        foreach (var key in keys)
+        var seen = new HashSet<string>();
+        var largestClique = new List<string>();
+        foreach (var kvp in conMap)
         {
-            foreach (var subnet in subnets)
+            if (seen.Contains(kvp.Key)) continue;
+            
+            var clique = new List<string> { kvp.Key };
+            foreach (var neighbour in kvp.Value)
             {
-                if (subnet.All(k => conMap[k].Contains(key)))
-                    subnet.Add(key);
-            }
-        }
-
-        return string.Join(",", subnets.MaxBy(s => s.Count)!.Order());
-    }
-    
-    public static string Part2()
-    {
-        var conMap = GetInput();
-        var allKeys = conMap.Keys.ToList();
-        var subnets = GetThreeConnected(conMap)
-            .Select(k => new HashSet<string> { k.Item1, k.Item2, k.Item3 })
-            .ToDictionary(s => string.Join(",", s.Order().ToList()));
-
-        var queue = new Queue<HashSet<string>>(subnets.Values);
-        while (queue.Any())
-        {
-            Console.WriteLine(queue.Count);
-            var current = queue.Dequeue();
-            foreach (var el in allKeys.Where(k => !current.Contains(k)))
-            {
-                if (current.All(c => conMap[el].Contains(c)))
+                var nn = conMap[neighbour];
+                if (clique.All(c => nn.Contains(c)))
                 {
-                    var newSubnet = current.Append(el).ToHashSet();
-                    var subnetKey = string.Join(",", newSubnet.Order().ToList());
-                    if (!subnets.TryAdd(subnetKey, newSubnet)) continue;
-                    queue.Enqueue(newSubnet);
+                    clique.Add(neighbour);
+                    seen.Add(neighbour);
                 }
             }
+            
+            if (largestClique.Count < clique.Count) largestClique = clique;
         }
 
-
-        var maxCount = subnets.Values.Max(s => s.Count);
-        var ordered = subnets.Where(s => s.Value.Count == maxCount)
-            .Select(s => s.Key)
-            .Order()
-            .ToList();
-        return ordered
-            .First();
+        return string.Join(",", largestClique.Order());
     }
 
-    private static Dictionary<string, HashSet<string>> GetInput()
+    private Dictionary<string, HashSet<string>> GetInput()
     {
-        var lines = File.ReadAllLines("Input/day23.txt");
-        var connections = lines.Select(line => line.Split('-').ToPair()).ToList();
+        var connections = Lines.Select(line => line.Split('-').ToPair()).ToList();
         var conMap = new Dictionary<string, HashSet<string>>();
         foreach (var connection in connections)
         {
@@ -69,13 +44,13 @@ public static class Day23
         return conMap;
     }
 
-    public static int Part1()
+    public override string Part1()
     {
         var conMap = GetInput();
         var results = GetThreeConnected(conMap);
 
         return results
-            .Count(x => x.Item1.StartsWith("t") || x.Item2.StartsWith("t") || x.Item3.StartsWith("t"));
+            .Count(x => x.Item1.StartsWith("t") || x.Item2.StartsWith("t") || x.Item3.StartsWith("t")).ToString();
     }
 
     private static HashSet<(string, string, string)> GetThreeConnected(Dictionary<string, HashSet<string>> conMap)

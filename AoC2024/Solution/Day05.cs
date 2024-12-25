@@ -1,20 +1,22 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day05
+public class Day05 : SolutionBase
 {
-    public static int Part1()
+    public override string Part1()
     {
         var (rules, updates) = GetInputs();
-        return updates.Sum(update => IsValid(update, rules) ? MidElement(update) : 0);
+        return updates.Sum(update => IsValid(update, rules) ? MidElement(update) : 0).ToString();
     }
 
-    public static int Part2()
+    public override string Part2()
     {
         var (rules, updates) = GetInputs();
-        return updates.Sum(update => IsValid(update, rules) ? 0 : MidElement(Sort(update, rules)));
+        return updates.Sum(update => IsValid(update, rules) ? 0 : MidElement(Sort(update, rules))).ToString();
     }
 
-    private static List<int> Sort(List<int> update, List<Tuple<int, int>> rules) =>
+    private List<int> Sort(List<int> update, List<Tuple<int, int>> rules) =>
         update.Order(Comparer<int>.Create((a, b) =>
         {
             foreach (var rule in rules)
@@ -26,16 +28,15 @@ public static class Day05
             return 0;
         })).ToList();
 
-    private static (List<Tuple<int, int>> rules, List<List<int>> updates) GetInputs()
+    private (List<Tuple<int, int>> rules, List<List<int>> updates) GetInputs()
     {
-        var lines = File.ReadAllLines(@"Input/day05.txt");
-        var parts = lines.SplitBy("").ToList();
+        var parts = Lines.SplitBy("").ToList();
         var rules = parts[0].Select(line => line.Split("|").Select(int.Parse).ToPair()).ToList();
         var updates = parts[1].Select(line => line.Split(",").Select(int.Parse).ToList()).ToList();
         return (rules, updates);
     }
 
-    private static bool IsValid(List<int> update, List<Tuple<int, int>> rules) =>
+    private bool IsValid(List<int> update, List<Tuple<int, int>> rules) =>
         rules.All(rule =>
         {
             var aIndex = update.IndexOf(rule.Item1);
@@ -43,5 +44,5 @@ public static class Day05
             return aIndex == -1 || bIndex == -1 || aIndex <= bIndex;
         });
 
-    private static int MidElement(List<int> update) => update[update.Count / 2];
+    private int MidElement(List<int> update) => update[update.Count / 2];
 }

@@ -1,19 +1,17 @@
 using System.Text.RegularExpressions;
+using AoC2024.Utils;
 
 namespace AoC2024.Solution;
 
-public static class Day14
+public class Day14 : SolutionBase
 {
-    public static int Part1()
+    public override string Part1()
     {
-        var lines = File.ReadLines(@"Input/day14.txt");
-        // var sizeX = 11;
-        // var sizeY = 7;
         var sizeX = 101;
         var sizeY = 103;
         var iterations = 100;
         var positions = new List<Vector2>();
-        foreach (var line in lines)
+        foreach (var line in Lines)
         {
             var regex = Regex.Matches(line, @"p=(\d*),(\d*) v=(-?\d*),(-?\d*)")[0].Groups;
             var p = new Vector2(regex[1].Value.ToInt(), regex[2].Value.ToInt());
@@ -30,30 +28,26 @@ public static class Day14
         var g3 = positions.Where(p => p.X > sizeX / 2 && p.Y < sizeY / 2).ToList();
         var g4 = positions.Where(p => p.X > sizeX / 2 && p.Y > sizeY / 2).ToList();
 
-        return g1.Count * g2.Count * g3.Count * g4.Count;
+        return (g1.Count * g2.Count * g3.Count * g4.Count).ToString();
     }
 
 
-    public static void Part2()
+    public override string Part2()
     {
-        var lines = File.ReadLines(@"Input/day14.txt");
+        return "Done";
+
         var sizeX = 101;
         var sizeY = 103;
         var positions = new List<Tuple<Vector2, Vector2>>();
-        foreach (var line in lines)
+        foreach (var line in Lines)
         {
             var regex = Regex.Matches(line, @"p=(\d*),(\d*) v=(-?\d*),(-?\d*)")[0].Groups;
             var p = new Vector2(regex[1].Value.ToInt(), regex[2].Value.ToInt());
             var vel = new Vector2(regex[3].Value.ToInt(), regex[4].Value.ToInt());
             positions.Add(new(p, vel));
-            // p += vel * iterations;
-            // positions.Add(
-            //     new Vector2(
-            //         p.X >= 0 ? p.X % sizeX : (sizeX - (-p.X % sizeX)) % sizeX,
-            //         p.Y >= 0 ? p.Y % sizeY : (sizeY - (-p.Y % sizeY)) % sizeY));
         }
 
-        int iterations=0;
+        int iterations = 0;
         while (true)
         {
             Console.Clear();
@@ -66,6 +60,7 @@ public static class Day14
                 PrintPositions(map, sizeX, sizeY);
                 Console.ReadKey();
             }
+
             for (var i = 0; i < positions.Count; i++)
             {
                 var position = positions[i];
@@ -75,6 +70,7 @@ public static class Day14
                         p.Y >= 0 ? p.Y % sizeY : (sizeY - (-p.Y % sizeY)) % sizeY),
                     position.Item2);
             }
+
             iterations++;
         }
     }
@@ -96,15 +92,16 @@ public static class Day14
                         break;
                     }
                 }
+
                 if (hasAll) return true;
             }
         }
+
         return false;
     }
 
     private static void PrintPositions(HashSet<Vector2> map, int sizeX, int sizeY)
     {
-        
         for (int y = 0; y < sizeY; y++)
         {
             for (int x = 0; x < sizeX; x++)
@@ -112,6 +109,7 @@ public static class Day14
                 var element = map.Contains(new Vector2(x, y)) ? "#" : ".";
                 Console.Write(element);
             }
+
             Console.WriteLine();
         }
     }

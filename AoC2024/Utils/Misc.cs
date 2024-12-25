@@ -1,6 +1,6 @@
-namespace AoC2024;
+namespace AoC2024.Utils;
 
-public static class Utils
+public static class Misc
 {
     public static void AddOrSet<T1>(this Dictionary<T1, int> dict, T1 key, int value) where T1 : notnull
     {

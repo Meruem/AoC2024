@@ -1,50 +1,61 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day20
+public class Day20 : SolutionBase
 {
-    public static int Part1() => Solve(2);
-    public static int Part2() => Solve(20);
+    public override string Part1() => Solve(2).ToString();
+    public override string Part2() => Solve(20).ToString();
 
-    private static int Solve(int radius)
+    private int Solve(int radius)
     {
-        var map = File.ReadAllLines("Input/day20.txt");
+        var map = Grid.FromLines(Lines);
         var start = map.FindPosition('S')!.Value;
         var end = map.FindPosition('E')!.Value;
 
         var current = start;
         var distance = 0;
-        var seen = new Dictionary<Vector2, int> { { start, distance } };
+        var path = new Dictionary<Vector2, int> { { start, distance } };
+        var direction = Directions.AllDirections.First(dir => !map.HasElementAt('#', dir));
         while (current != end)
         {
             distance++;
-            var next = Directions.AllDirections
+            var next = new[] { direction, direction.RotateClockwise(), direction.RotateCounterClockwise() }
                 .Select(dir => dir + current)
-                .Where(dir => !map.HasElementAt('#', dir) && !seen.ContainsKey(dir)).ToList();
-            current = next.First();
-            seen.Add(current, distance);
+                .First(dir => !map.HasElementAt('#', dir));
+            direction = next - current;
+            current = next;
+            path[current] = distance;
         }
 
-        var result = seen.SelectMany(kvp =>
+        int result = 0;
+        Parallel.ForEach(path, kvp =>
         {
             var pos = kvp.Key;
             var dist = kvp.Value;
-
-            var cheats = new List<Vector2>();
-            for (int x = -radius; x <= radius; x++)
-            for (int y = -radius; y <= radius; y++)
+            var c = 0;
+            
+            for (int x = 2; x <= radius; x++)
             {
-                if (Math.Abs(x) + Math.Abs(y) > radius) continue;
-                var p = pos + new Vector2(x, y);
-                if (seen.ContainsKey(p) && p != pos)
-                    cheats.Add(p);
+                var p = pos + new Vector2(x, 0);
+                if (path.ContainsKey(p) &&
+                    Math.Abs(path[p] - dist) - (p - pos).Distance >= 100)
+                    c++;
+       
             }
 
-            return cheats
-                .Select(ch => seen[ch] - dist - (ch - pos).Distance)
-                .Where(d => d > 0)
-                .ToList();
+            for (int y = 1; y <= radius; y++)
+            for (int x = y-radius; x <= radius - y; x++)
+            {
+                var p = pos + new Vector2(x, y);
+                if (path.ContainsKey(p) &&
+                    Math.Abs(path[p] - dist) - (p - pos).Distance >= 100)
+                    c++;
+            }
+            
+            Interlocked.Add(ref result, c);
         });
-        
-        return result.Count(cd => cd >= 100);
+
+        return result;
     }
 }

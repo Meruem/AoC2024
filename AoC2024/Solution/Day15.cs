@@ -1,21 +1,17 @@
 using System.Text;
+using AoC2024.Utils;
 
 namespace AoC2024.Solution;
 
-public static class Day15
+public class Day15 : SolutionBase
 {
-    public static int Part1()
+    public override string Part1()
     {
         var (map, commands) = GetInputs();
 
         var pos = map.FindPosition('@')!.Value;
         foreach (var command in commands)
         {
-            // foreach (var l in map)
-            // {
-            //     Console.WriteLine(l);
-            // }
-
             var dir = Directions.DirectionMap[command];
             var next = dir + pos;
             if (map.HasElementAt('.', next))
@@ -38,10 +34,10 @@ public static class Day15
             }
         }
 
-        return GetResult(map);
+        return GetResult(map).ToString();
     }
 
-    public static int Part2()
+    public override string Part2()
     {
         var (map, commands) = GetInputs();
         map = map.Select(line =>
@@ -72,11 +68,6 @@ public static class Day15
         var pos = map.FindPosition('@')!.Value;
         foreach (var command in commands)
         {
-            // foreach (var l in map)
-            // {
-            //     Console.WriteLine(l);
-            // }
-
             var dir = Directions.DirectionMap[command];
             var next = dir + pos;
             var charAtNext = map.GetCharAt(next);
@@ -89,7 +80,7 @@ public static class Day15
                     break;
                 case '[' or ']':
                 {
-                    var shouldMove = new HashSet<Tuple<Vector2, char>> { new (pos, '@') };
+                    var shouldMove = new HashSet<Tuple<Vector2, char>> { new(pos, '@') };
                     bool canMove = true;
                     var q = new Queue<Tuple<Vector2, char>>();
                     q.Enqueue(new Tuple<Vector2, char>(pos, '@'));
@@ -126,11 +117,12 @@ public static class Day15
 
                     if (canMove)
                     {
-                        foreach (var toMove in shouldMove)    
+                        foreach (var toMove in shouldMove)
                         {
                             map.SetElementAt('.', toMove.Item1);
                         }
-                        foreach (var toMove in shouldMove)    
+
+                        foreach (var toMove in shouldMove)
                         {
                             map.SetElementAt(toMove.Item2, toMove.Item1 + dir);
                         }
@@ -143,10 +135,10 @@ public static class Day15
             }
         }
 
-        return GetResult(map);
+        return GetResult(map).ToString();
     }
 
-    private static int GetResult(List<string> map)
+    private int GetResult(List<string> map)
     {
         var sum = 0;
         map.ForEachWithPos((ch, pos) =>
@@ -157,10 +149,9 @@ public static class Day15
         return sum;
     }
 
-    private static (List<string> map, List<char> commands) GetInputs()
+    private (List<string> map, List<char> commands) GetInputs()
     {
-        var lines = File.ReadAllLines("Input/day15.txt");
-        var parts = lines.SplitBy("").ToList();
+        var parts = Lines.SplitBy("").ToList();
         var map = parts[0];
         var commands = parts[1].SelectMany(x => x).ToList();
         return (map, commands);

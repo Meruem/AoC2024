@@ -1,4 +1,4 @@
-namespace AoC2024;
+namespace AoC2024.Utils;
 
 public readonly record struct Vector2(int X, int Y)
 {

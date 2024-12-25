@@ -1,28 +1,29 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day18
+public class Day18 : SolutionBase
 {
     private static bool IsInside(Vector2 pos, int maxX, int maxY) =>
         pos.X <= maxX && pos.X >= 0 && pos.Y <= maxY && pos.Y >= 0;
 
 
-    public static int Part1()
+    public override string Part1()
     {
-        var lines = File.ReadLines(@"Input/day18.txt");
-        var positions = lines.Select(line =>
+        var positions = Lines.Select(line =>
         {
             var splits = line.Split(",");
             return new Vector2(int.Parse(splits[0]), int.Parse(splits[1]));
         }).ToList();
 
         var walls = positions.Take(1024).ToList();
-        return FindPath(walls)!.Count - 1;
+        return (FindPath(walls)!.Count - 1).ToString();
     }
     
-    public static string Part2()
+    public override string Part2()
     {
         //2994
-        var lines = File.ReadLines(@"Input/day18.txt");
+        var lines = Lines;
         var positions = lines.Select(line =>
         {
             var splits = line.Split(",");
@@ -32,7 +33,6 @@ public static class Day18
         var previous = new List<Vector2>();
         for (int i = 1024; i < positions.Count; i++)
         {
-            Console.WriteLine(i);
             if (previous.Count > 0 && !previous.Contains(positions[i-1])) continue;
             var walls = positions.Take(i).ToList();
             var res = FindPath(walls);

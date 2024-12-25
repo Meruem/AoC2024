@@ -1,14 +1,15 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day10
+public class Day10 : SolutionBase
 {
     private static readonly List<Vector2> Directions = [new(-1, 0), new(1, 0), new(0, 1), new(0, -1)];
 
-    public static int Part1()
+    public override string Part1()
     {
-        var map = File.ReadAllLines("Input/day10.txt");
         var res = 0;
-        map.ForEachWithPos((ch, pos) =>
+        Lines.ForEachWithPos((ch, pos) =>
         {
             var val = ch.ToString().ToInt();
             if (val != 0) return;
@@ -21,21 +22,20 @@ public static class Day10
                         Directions
                             .Select(d => d + p)
                             .Where(newPos =>
-                                map.HasElementAt(expectedVal.ToString()[0], newPos))
+                                Lines.HasElementAt(expectedVal.ToString()[0], newPos))
                             .ToList())
                     .ToHashSet();
                 expectedVal++;
             }
             if (expectedVal == 10) res+= positions.Count;
         });
-        return res;
+        return res.ToString();
     }
     
-    public static int Part2()
+    public override string Part2()
     {
-        var map = File.ReadAllLines("Input/day10.txt");
         var res = 0;
-        map.ForEachWithPos((ch, pos) =>
+        Lines.ForEachWithPos((ch, pos) =>
         {
             var val = ch.ToString().ToInt();
             if (val != 0) return;
@@ -48,13 +48,13 @@ public static class Day10
                         Directions
                             .Select(d => d + p)
                             .Where(newPos =>
-                                map.HasElementAt(expectedVal.ToString()[0], newPos))
+                                Lines.HasElementAt(expectedVal.ToString()[0], newPos))
                             .ToList())
                     .ToList();
                 expectedVal++;
             }
             if (expectedVal == 10) res+= positions.Count;
         });
-        return res;
+        return res.ToString();
     }
 }

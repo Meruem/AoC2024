@@ -1,11 +1,12 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day09
+public  class Day09 : SolutionBase
 {
-    public static long Part1()
+    public override string Part1()
     {
-        var input = File.ReadAllText("Input/day09.txt");
-        var elements = GetElements(input);
+        var elements = GetElements(InputText);
 
         var freeSpaceIndex = FindFreeSpaceIndex(elements);
         while (freeSpaceIndex != -1)
@@ -35,13 +36,12 @@ public static class Day09
             freeSpaceIndex = FindFreeSpaceIndex(elements);
         }
 
-        return CheckSum(elements);
+        return CheckSum(elements).ToString();
     }
 
-    public static long Part2()
+    public override string Part2()
     {
-        var input = File.ReadAllText("Input/day09.txt");
-        // var input = "2333133121414131402";
+        var input = InputText;
         var elements = GetElements(input);
 
         var idToMove = elements.Last().Id is not null ? elements.Last().Id!.Value : elements[^2].Id!.Value;
@@ -77,7 +77,7 @@ public static class Day09
             idToMove--;
         }
 
-        return CheckSum(elements);
+        return CheckSum(elements).ToString();
     }
 
     private static long CheckSum(List<Element> elements)

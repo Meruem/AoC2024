@@ -1,16 +1,16 @@
 using System.Text.RegularExpressions;
+using AoC2024.Utils;
 
 namespace AoC2024.Solution;
 
-public static class Day03
+public class Day03 : SolutionBase
 {
-    public static int Part1()
+    public override string Part1()
     {
-        var lines = File.ReadAllText("Input/Day03.txt");
-        var matches = Regex.Matches(lines, @"(mul\((\d*),(\d*)\))");
+        var matches = Regex.Matches(InputText, @"(mul\((\d*),(\d*)\))");
         return matches.Sum(match =>
             int.Parse(match.Groups[2].Value) * int.Parse(match.Groups[3].Value)
-        );
+        ).ToString();
     }
 
     private static int CountMuls(string input)
@@ -21,9 +21,9 @@ public static class Day03
         );
     }
     
-    public static int Part2()
+    public override string Part2()
     {
-        var lines = File.ReadAllText("Input/Day03.txt");
+        var lines = InputText;
         var res = 0;
 
         while (lines.Length > 0)
@@ -32,17 +32,17 @@ public static class Day03
             if (dontIndex == -1)
             {
                 res += CountMuls(lines);
-                return res;
+                return res.ToString();
             }
             var enabled = lines.Substring(0, dontIndex);
             res += CountMuls(enabled);
             
             lines = lines.Substring(dontIndex + 1);
             var doIndex = lines.IndexOf("do()", StringComparison.Ordinal);
-            if (doIndex == -1) return res;
+            if (doIndex == -1) return res.ToString();
             lines = lines.Substring(doIndex + 1);
         }
 
-        return res;
+        return res.ToString();
     }
 }

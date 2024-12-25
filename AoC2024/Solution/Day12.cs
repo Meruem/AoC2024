@@ -1,10 +1,12 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day12
+public class Day12 : SolutionBase
 {
     private static readonly List<Vector2> Directions = [new(-1, 0), new(1, 0), new(0, 1), new(0, -1)];
 
-    private static int CountFences(HashSet<Vector2> fences, Vector2 direction)
+    private int CountFences(HashSet<Vector2> fences, Vector2 direction)
     {
         var min = fences.Select(v => v.X).Concat(fences.Select(v2 => v2.Y)).Min() - 1;
         var max = fences.Select(v => v.X).Concat(fences.Select(v2 => v2.Y)).Max() + 1;
@@ -30,14 +32,14 @@ public static class Day12
         return fenceCount;
     }
 
-    public static int Part1() => Solve(false);
-    public static int Part2() => Solve(true);
-    private static int Solve(bool shrink)
+    public override string Part1() => Solve(false).ToString();
+    public override string Part2() => Solve(true).ToString();
+
+    private int Solve(bool shrink)
     {
-        var map = File.ReadAllLines("Input/day12.txt");
         var seen = new HashSet<Vector2>();
         var res = 0;
-        map.ForEachWithPos((ch, pos) =>
+        Lines.ForEachWithPos((ch, pos) =>
         {
             if (seen.Contains(pos)) return;
             var todo = new Queue<Vector2>();
@@ -52,7 +54,7 @@ public static class Day12
                 foreach (var dir in Directions)
                 {
                     var next = dir + current;
-                    if (map.HasElementAt(ch, next))
+                    if (Lines.HasElementAt(ch, next))
                     {
                         if (!visited.Contains(next))
                         {
@@ -82,7 +84,7 @@ public static class Day12
                 fenceCount = fences.Count;
             }
 
-            Console.WriteLine($"visited: {visited.Count} fences: {fenceCount} ");
+            //Console.WriteLine($"visited: {visited.Count} fences: {fenceCount} ");
             res += fenceCount * visited.Count;
         });
 

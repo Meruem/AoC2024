@@ -1,18 +1,18 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day22
+public class Day22 : SolutionBase
 {
-    public static long Part1()
+    public override string Part1()
     {
-        var lines = File.ReadAllLines(@"Input/day22.txt");
-        return lines.Sum(line => CalculateNth(long.Parse(line), 2000)[^1]);
+        return Lines.Sum(line => CalculateNth(long.Parse(line), 2000)[^1]).ToString();
     }
 
-    public static long Part2()
+    public override string Part2()
     {
-        var lines = File.ReadAllLines(@"Input/day22.txt");
         var changes = new Dictionary<(int, int, int, int), long>();
-        foreach (var line in lines)
+        foreach (var line in Lines)
         {
             var prices = LastDigits(long.Parse(line), 2000);
             var deltas = prices.Skip(1).Select((p, i) => p - prices[i]).ToList();
@@ -24,13 +24,13 @@ public static class Day22
                 changePrices[key] = prices[i + 1];
             }
 
-            changes.MergeWith(changePrices);
+            MergeWith(changes, changePrices);
         }
 
-        return changes.Values.Max();
+        return changes.Values.Max().ToString();
     }
 
-    private static void MergeWith<TKey>(this Dictionary<TKey, long> first, Dictionary<TKey, long> second)
+    private void MergeWith<TKey>(Dictionary<TKey, long> first, Dictionary<TKey, long> second)
         where TKey : notnull
     {
         foreach (var kvp in second)

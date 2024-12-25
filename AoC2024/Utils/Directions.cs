@@ -1,4 +1,4 @@
-namespace AoC2024;
+namespace AoC2024.Utils;
 
 public static class Directions
 {
@@ -7,9 +7,9 @@ public static class Directions
     public static Vector2 Up => new Vector2(0, -1);
     public static Vector2 Down => new Vector2(0, 1);
 
-    public static List<Vector2> AllDirections = [Left, Right, Up, Down];
+    public static readonly List<Vector2> AllDirections = [Left, Right, Up, Down];
 
-    public static Dictionary<char, Vector2> DirectionMap = new()
+    public static readonly Dictionary<char, Vector2> DirectionMap = new()
     {
         { '<', Left },
         { '>', Right },

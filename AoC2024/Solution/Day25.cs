@@ -1,6 +1,8 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day25
+public class Day25 : SolutionBase
 {
     private record Pin(int A, int B, int C, int D, int E)
     {
@@ -12,10 +14,10 @@ public static class Day25
             A + pin.A <= 5 && B + pin.B <= 5 && C + pin.C <= 5 && D + pin.D <= 5 && E + pin.E <= 5;
     }
 
-    public static long Part1()
+    public override string Part2() => "Done!";
+    public override string Part1()
     {
-        var lines = File.ReadAllLines("Input/day25.txt");
-        var groups = lines.SplitBy("").ToList();
+        var groups = Lines.SplitBy("").ToList();
         var allLocks = new List<Pin>();
         var allKeys = new List<Pin>();
         foreach (var g in groups)
@@ -54,6 +56,6 @@ public static class Day25
             }
         }
 
-        return result;
+        return result.ToString();
     }
 }

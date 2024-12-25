@@ -1,6 +1,8 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day21
+public class Day21 : SolutionBase
 {
     static List<char> keypadChars = ['<', '>', '^', 'v', 'A'];
     static List<char> directions = ['<', '>', '^', 'v'];
@@ -24,10 +26,10 @@ public static class Day21
         return result;
     }
 
-    public static long Part1() => Solve(2);
-    public static long Part2() => Solve(25);
+    public override string Part1() => Solve(2).ToString();
+    public override string Part2() => Solve(25).ToString();
 
-    public static long Solve(int iterations)
+    public long Solve(int iterations)
     {
         foreach (var ch1 in keypadChars)
         foreach (var ch2 in keypadChars)
@@ -46,9 +48,8 @@ public static class Day21
             numericPrice[(ch1, ch2)] = there;
         }
 
-        var input = File.ReadAllLines("Input/day21.txt");
         long res = 0;
-        foreach (var line in input)
+        foreach (var line in Lines)
         {
             long sum = 0;
             for (int i = 0; i < line.Length; i++)
@@ -59,7 +60,6 @@ public static class Day21
 
             var nr = line.Remove(3).ToInt();
 
-            Console.WriteLine($"{nr}: {sum} ");
             res += nr * sum;
         }
 

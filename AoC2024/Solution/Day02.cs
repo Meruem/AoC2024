@@ -1,19 +1,19 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day02
+public class Day02 : SolutionBase
 {
-    public static int Part1()
+    public override string Part1()
     {
-        var lines = File.ReadAllLines("Input/day02.txt");
-        var reports = lines.Select(line => line.Split(" ").Select(int.Parse).ToList()).ToList();
-        return reports.Count(IsSafe);
+        var reports = Lines.Select(line => line.Split(" ").Select(int.Parse).ToList()).ToList();
+        return reports.Count(IsSafe).ToString();
     }
 
-    public static int Part2()
+    public override string Part2()
     {
-        var lines = File.ReadAllLines("Input/day02.txt");
-        var reports = lines.Select(line => line.Split(" ").Select(int.Parse).ToList()).ToList();
-        return reports.Count(IsSafe2);
+        var reports = Lines.Select(line => line.Split(" ").Select(int.Parse).ToList()).ToList();
+        return reports.Count(IsSafe2).ToString();
     }
 
     private static bool IsSafe(List<int> report)

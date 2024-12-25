@@ -1,3 +1,5 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
 public class Node
@@ -7,12 +9,14 @@ public class Node
     public string Path { get; set; } = "";
 }
 
-public static class Day19
+public class Day19 : SolutionBase
 {
-    public static long Part1()
+    public override string Part2() => Solve(false);
+    public override string Part1() => Solve(true);
+    
+    private string Solve(bool isPart1)
     {
-        var lines = File.ReadLines("Input/day19.txt").ToList();
-        var parts = lines.SplitBy("").ToList();
+        var parts = Lines.SplitBy("").ToList();
         var designs = parts[0][0].Split(", ");
         var startNode = new Node();
         foreach (var design in designs)
@@ -24,18 +28,19 @@ public static class Day19
                 {
                     currNode.Next[ch] = new Node { Path = currNode.Path + ch };
                 }
+
                 currNode = currNode.Next[ch];
             }
-            
+
             currNode.Accepts = true;
         }
+
         long result = 0;
         var count = 1;
         foreach (var target in parts[1])
         {
-            Console.WriteLine($"{count} / {parts[1].Count}");
             count++;
-            var currentStates = new Dictionary<Node, long> { {startNode ,1} };
+            var currentStates = new Dictionary<Node, long> { { startNode, 1 } };
             foreach (var ch in target)
             {
                 var res = new Dictionary<Node, long>();
@@ -52,17 +57,22 @@ public static class Day19
 
                 currentStates = res;
 
-                //Console.WriteLine(currentStates.Count);
                 if (currentStates.Count == 0)
                 {
                     break;
                 }
             }
 
-            // if (currentStates.ContainsKey(startNode)) result++; // part1
-            result += currentStates.GetValueOrDefault(startNode);
+            if (isPart1)
+            {
+                if (currentStates.ContainsKey(startNode)) result++;
+            }
+            else
+            {
+                result += currentStates.GetValueOrDefault(startNode);
+            }
         }
 
-        return result;
+        return result.ToString();
     }
 }

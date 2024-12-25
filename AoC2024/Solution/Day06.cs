@@ -1,31 +1,38 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day06
+public class Day06: SolutionBase
 {
-    public static int Part1()
+    public override string Part1()
     {
-        var lines = File.ReadAllLines("Input/day06.txt");
-        var (current, dir) = GetStartPositionAndDir(lines);
-        return NavigateThrough(lines, current, dir)!.Value;
+        var grid = Grid.FromLines(Lines);
+        var (current, dir) = GetStartPositionAndDir(grid);
+        return NavigateThrough(grid, current, dir).Count.ToString();
     }
 
-    public static int Part2()
+    public override string Part2()
     {
-        var lines = File.ReadAllLines("Input/day06.txt");
-        var (start, dir) = GetStartPositionAndDir(lines);
-        return lines.Positions() // brute force ftw
-            .Where(pos => pos != start)
-            .Sum(wall => NavigateThrough(lines, start, dir, wall) is null ? 1 : 0);
+        var grid = Grid.FromLines(Lines);
+        var (start, dir) = GetStartPositionAndDir(grid);
+        var positions = NavigateThrough(grid, start, dir);
+        var sum = 0;
+        foreach (var pos in positions)
+        {
+            if (pos == start) continue;
+            if (NavigateThrough(grid, start, dir, pos).Count == 0) sum++;
+        }
+        return sum.ToString();
     }
 
-    private static (Vector2 current, Vector2 dir) GetStartPositionAndDir(string[] lines)
+    private static (Vector2 current, Vector2 dir) GetStartPositionAndDir(Grid grid)
     {
         Vector2 current;
         Vector2 dir;
-        var up = lines.FindPosition('^');
-        var down = lines.FindPosition('v');
-        var left = lines.FindPosition('<');
-        var right = lines.FindPosition('>');
+        var up = grid.FindPosition('^');
+        var down = grid.FindPosition('v');
+        var left = grid.FindPosition('<');
+        var right = grid.FindPosition('>');
         if (up is not null)
         {
             current = up.Value;
@@ -54,25 +61,25 @@ public static class Day06
         return (current, dir);
     }
 
-    private static int? NavigateThrough(string[] lines, Vector2 current, Vector2 dir, Vector2? extraWall = null)
+    private static List<Vector2> NavigateThrough(Grid grid, Vector2 current, Vector2 dir, Vector2? extraWall = null)
     {
         var seen = new Dictionary<Vector2, HashSet<Vector2>>();
-        while (lines.IsInRange(current))
+        while (grid.IsInRange(current))
         {
             var next = current + dir;
-            if (lines.HasElementAt('#', next) || next == extraWall)
+            if (grid.HasElementAt('#', next) || next == extraWall)
             {
                 dir = dir.RotateClockwise();
             }
             else
             {
                 if (!seen.ContainsKey(current)) seen[current] = new HashSet<Vector2>();
-                if (seen[current].Contains(dir)) return null;
+                if (seen[current].Contains(dir)) return [];
                 seen[current].Add(dir);
                 current = next;
             }
         }
 
-        return seen.Keys.Count;
+        return seen.Keys.ToList();
     }
 }

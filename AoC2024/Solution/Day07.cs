@@ -1,29 +1,31 @@
+using AoC2024.Utils;
+
 namespace AoC2024.Solution;
 
-public static class Day07
+public class Day07 : SolutionBase
 {
-    public static long Part1()
+    public override string Part1()
     {
-        var lines = File.ReadAllLines("Input/Day07.txt");
-        return lines.Sum(line =>
+        return Lines.Sum(line =>
         {
             var parts = line.Split(": ");
             var target = long.Parse(parts[0]);
             var elements = parts[1].Split(" ").Select(long.Parse).ToList();
             return IsValid(target, elements) ? target : 0;
-        });
+        })
+        .ToString();
     }
     
-    public static long Part2()
+    public override string Part2()
     {
-        var lines = File.ReadAllLines("Input/Day07.txt");
-        return lines.Sum(line =>
+        return Lines.Sum(line =>
         {
             var parts = line.Split(": ");
             var target = long.Parse(parts[0]);
             var elements = parts[1].Split(" ").Select(long.Parse).ToList();
             return IsValid2(target, elements) ? target : 0;
-        });
+        })
+        .ToString();
     }
 
     private static bool IsValid(long target, List<long> elements)
